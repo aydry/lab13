@@ -9,14 +9,24 @@ function UserForm() {
     email: "",
   });
 
+  const [savedData, setSavedData] = useState([]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.name && formData.surname && formData.groupCode && formData.email) {
+      setSavedData([...savedData, formData]); // Додаємо новий запис у список
+      setFormData({ name: "", surname: "", groupCode: "", email: "" }); // Очищаємо форму
+    }
   };
 
   return (
     <div className="form-container">
       <h2>Форма користувача</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
@@ -45,14 +55,16 @@ function UserForm() {
           value={formData.email}
           onChange={handleChange}
         />
+        <button type="submit">Зберегти</button>
       </form>
 
-      <h3>Введені дані:</h3>
+      <h3>Збережені записи:</h3>
       <ul>
-        <li>Ім'я: {formData.name}</li>
-        <li>Прізвище: {formData.surname}</li>
-        <li>Код групи: {formData.groupCode}</li>
-        <li>Email: {formData.email}</li>
+        {savedData.map((data, index) => (
+          <li key={index}>
+            <strong>{data.name} {data.surname}</strong> — {data.groupCode}, {data.email}
+          </li>
+        ))}
       </ul>
     </div>
   );
